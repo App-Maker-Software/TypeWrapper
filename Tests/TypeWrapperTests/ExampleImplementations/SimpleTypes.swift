@@ -12,7 +12,7 @@ import TypeWrapper
 //
 extension TypeWrapper {
     func addSevenToInt(_ anyInt: Any) throws -> AnyWithTypeWrapper {
-        try self.send {
+        try self.attempt {
             ($0 as? _SwiftInt)?.onReceive(input: anyInt)
         }
     }
@@ -31,7 +31,7 @@ extension AttemptIfConformsStruct: _SwiftInt where Wrapped == Int {
 //
 extension TypeWrapper {
     func addSevenToDouble(_ anyDouble: Any) throws -> AnyWithTypeWrapper {
-        try self.send {
+        try self.attempt {
             ($0 as? _SwiftDouble)?.onReceive(input: anyDouble)
         }
     }

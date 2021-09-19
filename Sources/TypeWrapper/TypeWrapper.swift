@@ -3,25 +3,25 @@ public typealias TypeOnRecieve = (_ input: Any) throws -> AnyWithTypeWrapper
 
 public struct TypeWrapper {
     // public
-    public func send(_ attempter: (Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
-        try _send(attempter)
+    public func attempt(_ attempter: (Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
+        try _attempt(attempter)
     }
     #if DEBUG
     public let _rawType: Any.Type
     #endif
     
     // private
-    private let _send: ((Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper
+    private let _attempt: ((Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper
     
     // inits
     public init<Wrapped>(withType type: Wrapped.Type) {
-        self._send = HandleTypeWrapper<Wrapped>().send(attempter:)
+        self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
         #if DEBUG
         self._rawType = Wrapped.self
         #endif
     }
     public init<Wrapped: _GenericRegister>(withType type: Wrapped.Type) {
-        self._send = HandleTypeWrapper<Wrapped>().send(attempter:)
+        self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
         #if DEBUG
         self._rawType = Wrapped.self
         #endif

@@ -9,7 +9,7 @@
 
 extension TypeWrapper {
     func addToGenericRegister<T>(genericBuilder: Any, type: T.Type) throws -> AnyWithTypeWrapper {        
-        return try self.send {
+        return try self.attempt {
             ($0 as? _GenericBuilder)?.onReceive2(input: AddToGenericRegisterInfo(
                 genericBuilder: genericBuilder,
                 type: type

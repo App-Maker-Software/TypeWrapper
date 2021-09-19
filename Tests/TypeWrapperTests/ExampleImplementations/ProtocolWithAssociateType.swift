@@ -13,7 +13,7 @@ import SwiftUI
 //
 extension TypeWrapper {
     func makeRed(_ someView: Any) throws -> AnyWithTypeWrapper {
-        try self.send {
+        try self.attempt {
             ($0 as? _SwiftUIView)?.onReceive(input: someView)
         }
     }

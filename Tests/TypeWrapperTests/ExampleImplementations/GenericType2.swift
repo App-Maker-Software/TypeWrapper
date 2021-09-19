@@ -25,7 +25,7 @@ extension GenericFuncsTest: Register2Generics {
 //
 extension TypeWrapper {
     func runGenericFunc(funcName: String, args: [Any]) throws -> AnyWithTypeWrapper {
-        try self.send {
+        try self.attempt {
             ($0 as? _GenericFuncsTest)?.onReceive(input: Run_GenericFuncsTest_Args(funcName: funcName, args: args))
         }
     }

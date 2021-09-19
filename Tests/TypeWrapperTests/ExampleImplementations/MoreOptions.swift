@@ -12,7 +12,7 @@ import TypeWrapper
 //
 extension TypeWrapper {
     func boolMoreOptions(_ options: _BoolExtraOptions) throws -> AnyWithTypeWrapper {
-        try self.send {
+        try self.attempt {
             ($0 as? _Bool)?.onReceive(options: options)
         }
     }

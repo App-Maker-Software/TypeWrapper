@@ -23,7 +23,7 @@ extension CustomTypeWithGenericFloatingPoint: Register1Generic {
 //
 extension TypeWrapper {
     func add12Point4ToGenericType(_ any: Any) throws -> AnyWithTypeWrapper {
-        try self.send {
+        try self.attempt {
             ($0 as? _CustomTypeWithGenericFloatingPoint)?.onReceive(input: any)
         }
     }

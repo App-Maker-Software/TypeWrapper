@@ -56,6 +56,36 @@ final class TypeWrapperTests: XCTestCase {
             XCTFail()
         } catch {}
     }
+    func testMultipleSwiftUIViews() throws {
+        // make array of different views
+        var array: [AnyWithTypeWrapper] = []
+        for i in 0..<100 {
+            if i % 2 == 1 {
+                let view = Button("click me") { print("hi") }
+                array.append(addTypeWrapper(view))
+            } else {
+                let view = Text("hello")
+                array.append(addTypeWrapper(view))
+            }
+        }
+        
+        // make them all red without use of "AnyView"
+        for i in 0..<array.count {
+            let el = array[i]
+            array[i] = try el.typeWrapper.makeRed(el.any)
+        }
+        
+        // make sure other methods don't work
+        for i in 0..<array.count {
+            let el = array[i]
+            do {
+                _ = try el.typeWrapper.addSevenToInt(el.any)
+                _ = try el.typeWrapper.addSevenToDouble(el.any)
+                _ = try el.typeWrapper.add12Point4ToGenericType(el.any)
+                XCTFail()
+            } catch {}
+        }
+    }
     func testGenericType() throws {
         // normal
         let genericType1 = CustomTypeWithGenericFloatingPoint(floatingPointValue: Double(5.5))

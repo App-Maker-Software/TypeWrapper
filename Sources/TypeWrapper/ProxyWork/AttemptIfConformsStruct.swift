@@ -15,4 +15,4 @@ public struct AttemptIfConformsStruct<P: ProxyProtocol, G: _GenericRegister>: At
     public init<T>(_ type: T.Type, _ genericRegister: Generics.Type) where P == Proxy<T> {}
 }
 
-public typealias AnyWithTypeWrapper = (Any, TypeWrapper)
+public typealias AnyWithTypeWrapper = (any: Any, typeWrapper: TypeWrapper)

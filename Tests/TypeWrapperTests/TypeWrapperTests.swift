@@ -2,73 +2,6 @@ import XCTest
 import SwiftUI
 @testable import TypeWrapper
 
-//
-// add method to int
-//
-extension TypeWrapper {
-    func addSevenToInt(_ anyInt: Any) throws -> AnyWithTypeWrapper {
-        try self.send(anyInt, as: {
-            ($0 as? _SwiftInt)?.onReceive(info:)
-        })
-    }
-}
-protocol _SwiftInt {
-    func onReceive(info: Any) throws -> AnyWithTypeWrapper
-}
-extension AttemptIfConformsStruct: _SwiftInt where Wrapped == Int {
-    public func onReceive(info: Any) throws -> AnyWithTypeWrapper {
-        let int = info as! Int + 7
-        return addTypeWrapper(int)
-    }
-}
-//
-// add method to double
-//
-extension TypeWrapper {
-    func addSevenToDouble(_ anyDouble: Any) throws -> AnyWithTypeWrapper {
-        try self.send(anyDouble, as: {
-            ($0 as? _SwiftDouble)?.onReceive(info:)
-        })
-    }
-}
-protocol _SwiftDouble {
-    func onReceive(info: Any) throws -> AnyWithTypeWrapper
-}
-extension AttemptIfConformsStruct: _SwiftDouble where Wrapped == Double {
-    public func onReceive(info: Any) throws -> AnyWithTypeWrapper {
-        let double = info as! Double + 7
-        return addTypeWrapper(double)
-    }
-}
-
-//
-// add method to view
-//
-extension TypeWrapper {
-    func makeRed(_ someView: Any) throws -> AnyWithTypeWrapper {
-        try self.send(someView, as: {
-            ($0 as? _SwiftUIView)?.onReceive(info:)
-        })
-    }
-}
-protocol _SwiftUIView {
-    func onReceive(info: Any) throws -> AnyWithTypeWrapper
-}
-extension AttemptIfConformsStruct: _SwiftUIView where Wrapped: View {
-    public func onReceive(info: Any) throws -> AnyWithTypeWrapper {
-        let redView = (info as! Wrapped).foregroundColor(.red)
-        return addTypeWrapper(redView)
-    }
-}
-
-struct CustomTypeWithGenericFloatingPoint<T: FloatingPoint> {
-    let floatingPointValue: T
-}
-
-extension CustomTypeWithGenericFloatingPoint: GenericRegister {
-    typealias Generic0 = T
-}
-
 final class TypeWrapperTests: XCTestCase {
     func testInt() throws {
         // normal
@@ -118,6 +51,31 @@ final class TypeWrapperTests: XCTestCase {
         // should fail here
         do {
             _ = try typeWrapper.addSevenToInt(anyConcreteView)
+            XCTFail()
+        } catch {}
+    }
+    func testGenericType() throws {
+        // normal
+        let genericType1 = CustomTypeWithGenericFloatingPoint(floatingPointValue: Double(5.5))
+        let normalResult1 = genericType1.floatingPointValue + 12.4
+        let genericType2 = CustomTypeWithGenericFloatingPoint(floatingPointValue: CGFloat(2.5))
+        let normalResult2 = genericType2.floatingPointValue + 12.4
+        
+        // without using type directly
+        let (erasedValue1, typeWrapper1) = addTypeWrapper(genericType1)
+        let (indirectResult1, _) = try typeWrapper1.add12Point4ToGenericType(erasedValue1)
+        let (erasedValue2, typeWrapper2) = addTypeWrapper(genericType2)
+        let (indirectResult2, _) = try typeWrapper2.add12Point4ToGenericType(erasedValue2)
+        
+        XCTAssertEqual("\(normalResult1)", "\(indirectResult1)")
+        XCTAssertEqual("\(normalResult2)", "\(indirectResult2)")
+        XCTAssertNotEqual("\(normalResult1)", "\(normalResult2)")
+        XCTAssertNotEqual("\(indirectResult1)", "\(indirectResult2)")
+        
+        // should fail here
+        do {
+            _ = try typeWrapper1.addSevenToInt(erasedValue1)
+            _ = try typeWrapper2.addSevenToInt(erasedValue2)
             XCTFail()
         } catch {}
     }

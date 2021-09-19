@@ -21,8 +21,18 @@ public struct TypeWrapper {
         self._rawType = Wrapped.self
         #endif
     }
+    public init<Wrapped: GenericRegister>(withType type: Wrapped.Type) {
+        let _typeWrapper = HandleTypeWrapper<Wrapped>()
+        self._send = _typeWrapper.send(_:toKnown:)
+        #if DEBUG
+        self._rawType = Wrapped.self
+        #endif
+    }
 }
 
 public func addTypeWrapper<T>(_ value: T) -> (Any, TypeWrapper) {
+    return (value, .init(withType: T.self))
+}
+public func addTypeWrapper<T: GenericRegister>(_ value: T) -> (Any, TypeWrapper) {
     return (value, .init(withType: T.self))
 }

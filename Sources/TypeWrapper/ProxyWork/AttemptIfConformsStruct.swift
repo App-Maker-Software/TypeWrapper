@@ -10,9 +10,10 @@ protocol AttemptIfConforms {
 //    func send(_ info: InfoToSendToConcreteType, to typeId: TypeId.Type) throws -> AnyWithTypeWrapper
 }
 
-public final class AttemptIfConformsStruct<P: ProxyProtocol>: AttemptIfConforms {
-    typealias Wrapped = P.Wrapped
-    public init<T>(_ type: T.Type) where P == Proxy<T> {}
+public struct AttemptIfConformsStruct<P: ProxyProtocol, G: GenericRegister>: AttemptIfConforms {
+    public typealias Wrapped = P.Wrapped
+    public typealias Generics = G
+    public init<T>(_ type: T.Type, _ genericRegister: Generics.Type) where P == Proxy<T> {}
 }
 
 public typealias AnyWithTypeWrapper = (Any, TypeWrapper)

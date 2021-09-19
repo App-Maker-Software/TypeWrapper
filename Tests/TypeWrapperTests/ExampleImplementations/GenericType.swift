@@ -14,12 +14,8 @@ public struct CustomTypeWithGenericFloatingPoint<T: FloatingPoint & ExpressibleB
     let floatingPointValue: T
 }
 
-extension CustomTypeWithGenericFloatingPoint: GenericRegister {
+extension CustomTypeWithGenericFloatingPoint: Register1Generic {
     public typealias Generic0 = T
-    public typealias Generic1 = UnusedStub
-    public typealias Generic2 = UnusedStub
-    public typealias Generic3 = UnusedStub
-    public typealias Generic4 = UnusedStub
 }
 
 //

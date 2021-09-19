@@ -139,23 +139,6 @@ final class TypeWrapperTests: XCTestCase {
         let goodValue1_2: Text = Text("hello")
         let goodValue2_1: CGFloat = 3
         let goodValue2_2: Slider<EmptyView, EmptyView> = Slider(value: .constant(0))
-        let value1 = GenericFuncsTest(value: goodValue1_1, view: goodValue1_2)
-        let value2 = GenericFuncsTest(value: goodValue2_1, view: goodValue2_2)
-        let expectedType1 = type(of: value1)
-        let expectedType2 = type(of: value2)
-        
-        let a = ArbitraryGenericBuilder()
-            .add(type: type(of: goodValue1_1))
-            .add(type: type(of: goodValue1_2))
-            .getBuilt()
-        fatalError("\(a.any)")
-//        XCTAssertEqual(expectedType1, a.any)
-    }
-    func testGenericInit() throws {
-        let goodValue1_1: Double = 3
-        let goodValue1_2: Text = Text("hello")
-        let goodValue2_1: CGFloat = 3
-        let goodValue2_2: Slider<EmptyView, EmptyView> = Slider(value: .constant(0))
         let goodValue3_1: Float = 3
         let goodValue3_2: EmptyView = EmptyView()
         let badValue1: Int = 3
@@ -166,11 +149,40 @@ final class TypeWrapperTests: XCTestCase {
         let result2 = GenericFuncsTest(value: goodValue2_1, view: goodValue2_2)
         let result3 = GenericFuncsTest(value: goodValue3_1, view: goodValue3_2)
         
-//        let ok = GenericFuncsTest.self
-//        let customTypeWithGenericFloatingPoint: TypeWrapper = TypeWrapper(withType: CustomTypeWithGenericFloatingPoint<<#T: ExpressibleByFloatLiteral & FloatingPoint#>>.self)
+        let genericTypeInfo1 = ArbitraryGenericBuilder()
+            .add(type: type(of: goodValue1_1))
+            .add(type: type(of: goodValue1_2))
+            .getBuilt()
+        
+        let resultFromAny1 = try genericTypeInfo1.attemptInit(args: AttemptInitArgs(
+            args: [goodValue1_1, goodValue1_2]
+        ))
         
         
+        let genericTypeInfo2 = ArbitraryGenericBuilder()
+            .add(type: type(of: goodValue2_1))
+            .add(type: type(of: goodValue2_2))
+            .getBuilt()
+        
+        let resultFromAny2 = try genericTypeInfo2.attemptInit(args: AttemptInitArgs(
+            args: [goodValue2_1, goodValue2_2]
+        ))
+        
+        
+        let genericTypeInfo3 = ArbitraryGenericBuilder()
+            .add(type: type(of: goodValue3_1))
+            .add(type: type(of: goodValue3_2))
+            .getBuilt()
+        
+        let resultFromAny3 = try genericTypeInfo3.attemptInit(args: AttemptInitArgs(
+            args: [goodValue3_1, goodValue3_2]
+        ))
+        
+        XCTAssertEqual("\(type(of:result1 as Any))", "\(type(of:resultFromAny1.any))")
+        XCTAssertEqual("\(type(of:result2 as Any))", "\(type(of:resultFromAny2.any))")
+        XCTAssertEqual("\(type(of:result3 as Any))", "\(type(of:resultFromAny3.any))")
     }
+    
     func testMoreOptionsExample() throws {
         let bool1 = false
         let bool2 = true

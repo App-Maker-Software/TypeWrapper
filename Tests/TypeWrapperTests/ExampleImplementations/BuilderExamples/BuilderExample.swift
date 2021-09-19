@@ -1,8 +1,8 @@
 //
-//  GenericType2.swift
+//  BuilderExample.swift
 //  
 //
-//  Created by Joseph Hinkle on 9/19/21.
+//  Created by Joseph Hinkle on 9/20/21.
 //
 
 import TypeWrapper
@@ -24,24 +24,23 @@ extension GenericFuncsTest: Register2Generics {
 // implement for generic
 //
 extension TypeWrapper {
-    func runGenericFunc(funcName: String, args: [Any]) throws -> AnyWithTypeWrapper {
+    func attemptInit(args: AttemptInitArgs) throws -> AnyWithTypeWrapper {
         try self.attempt {
-            ($0 as? _GenericFuncsTest)?.onReceive(input: Run_GenericFuncsTest_Args(funcName: funcName, args: args))
+            ($0 as? _GenericFuncsTest)?.onReceive(input: args)
         }
     }
 }
-struct Run_GenericFuncsTest_Args {
-    let funcName: String
+struct AttemptInitArgs {
     let args: [Any]
 }
 protocol _GenericFuncsTest {
-    func onReceive(input: Run_GenericFuncsTest_Args) -> AnyWithTypeWrapper
+    func onReceive(input: AttemptInitArgs) -> AnyWithTypeWrapper
 }
-extension AttemptIfConformsStruct: _GenericFuncsTest where Wrapped == GenericFuncsTest<Generics.Generic0, Generics.Generic1> {
-    func onReceive(input: Run_GenericFuncsTest_Args) -> AnyWithTypeWrapper {
+extension AttemptIfConformsStruct: _GenericFuncsTest where Wrapped: _GenericRegister, Generics.Generic0: ExpressibleByFloatLiteral, Generics.Generic1: View {
+    func onReceive(input: AttemptInitArgs) -> AnyWithTypeWrapper {
         if let arg1: Generics.Generic0 = input.args.first as? Generics.Generic0,
            let arg2: Generics.Generic1 = input.args.dropFirst().first as? Generics.Generic1 {
-            let result = Wrapped.init(value: arg1, view: arg2)
+            let result = GenericFuncsTest.init(value: arg1, view: arg2)
             return addTypeWrapper(result)
         }
         fatalError()

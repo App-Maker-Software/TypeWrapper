@@ -18,8 +18,8 @@ public struct ArbitraryGenericBuilder {
         return new
     }
     
-    public func getBuilt() -> AnyWithTypeWrapper {
-        return genericBuilder
+    public func getBuilt() -> TypeWrapper {
+        return genericBuilder.typeWrapper
     }
     
     public init() {

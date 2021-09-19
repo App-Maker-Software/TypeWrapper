@@ -113,4 +113,20 @@ final class TypeWrapperTests: XCTestCase {
             XCTFail()
         } catch {}
     }
+    func testMoreOptionsExample() throws {
+        let bool1 = false
+        let bool2 = true
+        
+        let and = bool1 && bool2
+        let or = bool1 || bool2
+        
+        let anyBool1: AnyWithTypeWrapper = addTypeWrapper(bool1)
+        let anyBool2: AnyWithTypeWrapper = addTypeWrapper(bool2)
+        
+        let andResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "&&"))
+        let orResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "||"))
+        
+        XCTAssertEqual("\(and)", "\(andResult.any)")
+        XCTAssertEqual("\(or)", "\(orResult.any)")
+    }
 }

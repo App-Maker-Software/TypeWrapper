@@ -144,11 +144,11 @@ final class TypeWrapperTests: XCTestCase {
         let expectedType1 = type(of: value1)
         let expectedType2 = type(of: value2)
         
-        let a = ArbitraryGenericBuilder()
-            .add(type: type(of: goodValue1_1))
-            .add(type: type(of: goodValue1_2))
-            .getBuilt()
-        fatalError("\(a.any)")
+//        let a = ArbitraryGenericBuilder()
+//            .add(type: type(of: goodValue1_1))
+//            .add(type: type(of: goodValue1_2))
+//            .getBuilt()
+//        fatalError("\(a.any)")
 //        XCTAssertEqual(expectedType1, a.any)
     }
     func testGenericInit() throws {

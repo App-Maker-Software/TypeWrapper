@@ -13,17 +13,18 @@ import SwiftUI
 //
 extension TypeWrapper {
     func makeRed(_ someView: Any) throws -> AnyWithTypeWrapper {
-        try self.send(someView, as: {
-            ($0 as? _SwiftUIView)?.onReceive(input:)
-        })
+        try self.send {
+            ($0 as? _SwiftUIView)?.onReceive(input: someView)
+        }
     }
 }
 protocol _SwiftUIView {
-    func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) -> AnyWithTypeWrapper
 }
 extension AttemptIfConformsStruct: _SwiftUIView where Wrapped: View {
-    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
-        let redView = (input as! Wrapped).foregroundColor(.red)
+    public func onReceive(input: Any) -> AnyWithTypeWrapper {
+        let view = input as! Wrapped
+        let redView = view.foregroundColor(.red)
         return addTypeWrapper(redView)
     }
 }

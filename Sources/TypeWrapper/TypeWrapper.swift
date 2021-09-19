@@ -28,9 +28,15 @@ public struct TypeWrapper {
     }
 }
 
-public func addTypeWrapper<T>(_ value: T) -> (Any, TypeWrapper) {
-    return (value, .init(withType: T.self))
+public func addTypeWrapper<T>(_ value: T) -> AnyWithTypeWrapper {
+    return AnyWithTypeWrapper(
+        any: value,
+        typeWrapper: .init(withType: T.self)
+    )
 }
-public func addTypeWrapper<T: _GenericRegister>(_ value: T) -> (Any, TypeWrapper) {
-    return (value, .init(withType: T.self))
+public func addTypeWrapper<T: _GenericRegister>(_ value: T) -> AnyWithTypeWrapper {
+    return AnyWithTypeWrapper(
+        any: value,
+        typeWrapper: .init(withType: T.self)
+    )
 }

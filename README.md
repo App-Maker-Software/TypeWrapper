@@ -39,11 +39,13 @@ extension AttemptIfConformsStruct: _SwiftUIView where Wrapped: View {
 
 
 // usage
-var (any, typeWrapper): (Any, TypeWrapper) = addTypeWrapper(SwiftUI.Text("hello world"))
+var anyWithTypeWrapper: AnyWithTypeWrapper = addTypeWrapper(SwiftUI.Text("hello world"))
 if condition {
-    (any, typeWrapper) = addTypeWrapper(SwiftUI.Button("click me") { print("clicked") })
+    anyWithTypeWrapper = addTypeWrapper(SwiftUI.Button("click me") { print("clicked") })
 }
-let (redView, newTypeWrapper): (Any, TypeWrapper) = try typeWrapper.makeRed(any) // ✅ works no matter what type we put in...as long as it conforms to View
+anyWithTypeWrapper = try anyWithTypeWrapper.typeWrapper.makeRed(anyWithTypeWrapper.any) // ✅ works no matter what type we put in...as long as it conforms to View
+print(anyWithTypeWrapper.any) // raw value
+print(anyWithTypeWrapper.typeWrapper) // type wrapper
 ```
 
 You can see how this can be useful if you have an array of things of type `View` and you want to make changes without using `AnyView`:

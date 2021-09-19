@@ -31,7 +31,7 @@ extension TypeWrapper {
 protocol _CustomTypeWithGenericFloatingPoint {
     func onReceive(input: Any) throws -> AnyWithTypeWrapper
 }
-extension AttemptIfConformsStruct: _CustomTypeWithGenericFloatingPoint where Wrapped == CustomTypeWithGenericFloatingPoint<Generics.Generic0>, Generics.Generic0: FloatingPoint & ExpressibleByFloatLiteral {
+extension AttemptIfConformsStruct: _CustomTypeWithGenericFloatingPoint where Wrapped == CustomTypeWithGenericFloatingPoint<Generics.Generic0> {
     public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
         let floatingPointValue = (input as! Wrapped).floatingPointValue
         let twelvePoint4: Generics.Generic0 = 12.4

@@ -40,3 +40,8 @@ public func addTypeWrapper<T: _GenericRegister>(_ value: T) -> AnyWithTypeWrappe
         typeWrapper: .init(withType: T.self)
     )
 }
+
+public struct AnyWithTypeWrapper {
+    public let any: Any
+    public let typeWrapper: TypeWrapper
+}

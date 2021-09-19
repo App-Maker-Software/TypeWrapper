@@ -8,16 +8,11 @@
 protocol GenericBuilder: _GenericRegister {
     // must return another generic builder
     func add<T>(type: T.Type) -> AnyWithTypeWrapper
-    // takes the new type and returns another generic builder
-    func add2(type: TypeWrapper) -> AnyWithTypeWrapper
 }
 
 extension _NonGeneric: GenericBuilder {
     func add<T0>(type: T0.Type) -> AnyWithTypeWrapper {
         addTypeWrapper(GenericBuilder1<T0>())
-    }
-    func add2(type: TypeWrapper) -> AnyWithTypeWrapper {
-        
     }
 }
 

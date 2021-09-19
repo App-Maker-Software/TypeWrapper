@@ -9,31 +9,45 @@
 
 extension TypeWrapper {
     func addToGenericRegister<T>(genericBuilder: Any, type: T.Type) throws -> AnyWithTypeWrapper {
-        try self.send(AddToGenericRegisterInfo(
+        func _usingGenericBuilder<GB: GenericBuilder>(gb: GB) {
+            
+        }
+        
+        return try self.send(AddToGenericRegisterInfo(
             genericBuilder: genericBuilder,
             type: type
         ), as: {
-            ($0 as? __GenericRegister)?.onReceive(input:)
+            try! ($0 as? _GenericBuilder)?.onReceive2(input: type)
+            fatalError()
         })
     }
 }
 struct AddToGenericRegisterInfo {
     let genericBuilder: Any
+    let type: TypeWrapper
     func addTypeTo<T: GenericBuilder>(builder: T) -> AnyWithTypeWrapper {
         fatalError()
-        builder.add(type: <#T##T.Type#>)
     }
     init<T>(genericBuilder: Any, type: T.Type) {
         self.genericBuilder = genericBuilder
+        self.type = TypeWrapper(withType: type)
     }
 }
-protocol __GenericRegister {
+protocol _GenericBuilder {
     func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive2<T>(input: T) throws -> AnyWithTypeWrapper
 }
-extension AttemptIfConformsStruct: __GenericRegister where Wrapped: GenericBuilder {
+extension AttemptIfConformsStruct: _GenericBuilder where Wrapped: GenericBuilder {
     func onReceive(input: Any) throws -> AnyWithTypeWrapper {
         let addToGenericRegisterInfo = input as! AddToGenericRegisterInfo
         let genericBuilder: Wrapped = addToGenericRegisterInfo.genericBuilder as! Wrapped
         return addToGenericRegisterInfo.addTypeTo(builder: genericBuilder)
+    }
+    func onReceive2<T>(input: T) throws -> AnyWithTypeWrapper {
+        print(T.self)
+        fatalError()
+//        let addToGenericRegisterInfo = input as! AddToGenericRegisterInfo
+//        let genericBuilder: Wrapped = addToGenericRegisterInfo.genericBuilder as! Wrapped
+//        return addToGenericRegisterInfo.addTypeTo(builder: genericBuilder)
     }
 }

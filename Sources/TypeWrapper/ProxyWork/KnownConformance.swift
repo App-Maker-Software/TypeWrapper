@@ -6,7 +6,7 @@
 //
 
 public protocol KnownConformance {
-    func onReceive(info: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) throws -> AnyWithTypeWrapper
     static func attemptCast(_ val: Any) throws -> KnownConformance
 }
 

@@ -1,10 +1,10 @@
 
-public typealias TypeOnRecieve = (_ info: Any) throws -> AnyWithTypeWrapper
+public typealias TypeOnRecieve = (_ input: Any) throws -> AnyWithTypeWrapper
 
 public struct TypeWrapper {
     // public
-    public func send(_ info: Any, as toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper {
-        try _send(info, toKnown)
+    public func send(_ input: Any, as toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper {
+        try _send(input, toKnown)
     }
     #if DEBUG
     public let _rawType: Any.Type

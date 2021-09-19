@@ -6,18 +6,18 @@
 //
 
 public struct HandleTypeWrapper<Wrapped> {
-    func send(_ info: Any, toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper {
+    func send(_ input: Any, toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper {
         let attempt = AttemptIfConformsStruct(Wrapped.self, _NonGeneric.self)
         if let typeOnRecieve = toKnown(attempt) {
-            return try typeOnRecieve(info)
+            return try typeOnRecieve(input)
         } else {
             throw TypeWrapperError.mismatch
         }
     }
-    func send(_ info: Any, toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper where Wrapped: _GenericRegister {
+    func send(_ input: Any, toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper where Wrapped: _GenericRegister {
         let attempt = AttemptIfConformsStruct(Wrapped.self, Wrapped.self)
         if let typeOnRecieve = toKnown(attempt) {
-            return try typeOnRecieve(info)
+            return try typeOnRecieve(input)
         } else {
             throw TypeWrapperError.mismatch
         }

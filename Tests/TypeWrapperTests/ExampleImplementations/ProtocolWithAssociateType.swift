@@ -9,21 +9,21 @@ import TypeWrapper
 import SwiftUI
 
 //
-// add method to view
+// implement for protocol with associated type
 //
 extension TypeWrapper {
     func makeRed(_ someView: Any) throws -> AnyWithTypeWrapper {
         try self.send(someView, as: {
-            ($0 as? _SwiftUIView)?.onReceive(info:)
+            ($0 as? _SwiftUIView)?.onReceive(input:)
         })
     }
 }
 protocol _SwiftUIView {
-    func onReceive(info: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) throws -> AnyWithTypeWrapper
 }
 extension AttemptIfConformsStruct: _SwiftUIView where Wrapped: View {
-    public func onReceive(info: Any) throws -> AnyWithTypeWrapper {
-        let redView = (info as! Wrapped).foregroundColor(.red)
+    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
+        let redView = (input as! Wrapped).foregroundColor(.red)
         return addTypeWrapper(redView)
     }
 }

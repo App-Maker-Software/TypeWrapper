@@ -7,7 +7,6 @@
 
 protocol AttemptIfConforms {
     associatedtype Wrapped
-//    func send(_ info: InfoToSendToConcreteType, to typeId: TypeId.Type) throws -> AnyWithTypeWrapper
 }
 
 public struct AttemptIfConformsStruct<P: ProxyProtocol, G: _GenericRegister>: AttemptIfConforms {

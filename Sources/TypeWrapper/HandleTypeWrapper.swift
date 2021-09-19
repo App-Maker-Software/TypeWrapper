@@ -7,7 +7,7 @@
 
 public struct HandleTypeWrapper<Wrapped> {
     func send(_ info: Any, toKnown: (Any) -> TypeOnRecieve?) throws -> AnyWithTypeWrapper {
-        let attempt = AttemptIfConformsStruct(Wrapped.self, NonGeneric.self)
+        let attempt = AttemptIfConformsStruct(Wrapped.self, _NonGeneric.self)
         if let typeOnRecieve = toKnown(attempt) {
             return try typeOnRecieve(info)
         } else {

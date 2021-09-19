@@ -14,6 +14,15 @@ public protocol _GenericRegister {
     associatedtype Generic4
 }
 
+// interal use for when users don't have a generic
+enum _NonGeneric: _GenericRegister {
+    public typealias Generic0 = UnusedStub
+    public typealias Generic1 = UnusedStub
+    public typealias Generic2 = UnusedStub
+    public typealias Generic3 = UnusedStub
+    public typealias Generic4 = UnusedStub
+}
+
 // what a user will use to register their generics
 public protocol Register1Generic: _GenericRegister where
     Generic1 == UnusedStub,
@@ -30,14 +39,6 @@ public protocol Register3Generics: _GenericRegister where
 public protocol Register4Generics: _GenericRegister where
     Generic4 == UnusedStub {}
 public protocol Register5Generics: _GenericRegister {}
-
-public enum NonGeneric: _GenericRegister {
-    public typealias Generic0 = UnusedStub
-    public typealias Generic1 = UnusedStub
-    public typealias Generic2 = UnusedStub
-    public typealias Generic3 = UnusedStub
-    public typealias Generic4 = UnusedStub
-}
 
 // represents the absence of using a generic
 public protocol UnusedStub {}

@@ -15,15 +15,13 @@ public struct TypeWrapper {
     
     // inits
     public init<Wrapped>(withType type: Wrapped.Type) {
-        let _typeWrapper = HandleTypeWrapper<Wrapped>()
-        self._send = _typeWrapper.send(_:toKnown:)
+        self._send = HandleTypeWrapper<Wrapped>().send(_:toKnown:)
         #if DEBUG
         self._rawType = Wrapped.self
         #endif
     }
     public init<Wrapped: _GenericRegister>(withType type: Wrapped.Type) {
-        let _typeWrapper = HandleTypeWrapper<Wrapped>()
-        self._send = _typeWrapper.send(_:toKnown:)
+        self._send = HandleTypeWrapper<Wrapped>().send(_:toKnown:)
         #if DEBUG
         self._rawType = Wrapped.self
         #endif

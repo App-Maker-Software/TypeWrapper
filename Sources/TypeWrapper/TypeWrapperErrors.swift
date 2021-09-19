@@ -1,5 +1,5 @@
 //
-//  TypeErrors.swift
+//  TypeWrapperErrors.swift
 //  
 //
 //  Created by Joseph Hinkle on 9/19/21.

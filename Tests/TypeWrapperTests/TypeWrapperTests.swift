@@ -34,6 +34,7 @@ final class TypeWrapperTests: XCTestCase {
         // should fail here
         do {
             _ = try typeWrapper.addSevenToInt(anyDouble)
+            _ = try typeWrapper.add12Point4ToGenericType(anyDouble)
             XCTFail()
         } catch {}
     }
@@ -51,6 +52,7 @@ final class TypeWrapperTests: XCTestCase {
         // should fail here
         do {
             _ = try typeWrapper.addSevenToInt(anyConcreteView)
+            _ = try typeWrapper.add12Point4ToGenericType(anyConcreteView)
             XCTFail()
         } catch {}
     }
@@ -76,6 +78,8 @@ final class TypeWrapperTests: XCTestCase {
         do {
             _ = try typeWrapper1.addSevenToInt(erasedValue1)
             _ = try typeWrapper2.addSevenToInt(erasedValue2)
+            _ = try typeWrapper1.addSevenToDouble(erasedValue1)
+            _ = try typeWrapper2.addSevenToDouble(erasedValue2)
             XCTFail()
         } catch {}
     }

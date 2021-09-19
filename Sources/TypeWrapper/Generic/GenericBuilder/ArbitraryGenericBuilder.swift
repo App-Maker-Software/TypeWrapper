@@ -11,11 +11,9 @@ public struct ArbitraryGenericBuilder {
     
     public func add<T>(type: T.Type) -> ArbitraryGenericBuilder {
         var new = self
-        new.genericBuilder = addTypeWrapper(
-            try! genericBuilder.typeWrapper.addToGenericRegister(
-                genericBuilder: genericBuilder.any,
-                type: type
-            )
+        new.genericBuilder = try! genericBuilder.typeWrapper.addToGenericRegister(
+            genericBuilder: genericBuilder.any,
+            type: type
         )
         return new
     }

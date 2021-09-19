@@ -222,23 +222,24 @@ final class TypeWrapperTests: XCTestCase {
         XCTAssertEqual("\(and)", "\(andResult.any)")
         XCTAssertEqual("\(or)", "\(orResult.any)")
     }
-//    func testClosures() throws {
-//        let closure1: (Bool) -> Bool = {!$0}
-//        let closure2: (Int) -> Int = {$0 * 3}
-//
-//        let input1: Bool = false
-//        let input2: Int = 3
-//
-//        let result1 = closure1(input1)
-//        let result2 = closure2(input2)
-//
-//        let anyClosure1: AnyWithTypeWrapper = addTypeWrapper(closure1)
-//        let anyClosure2: AnyWithTypeWrapper = addTypeWrapper(closure2)
-//
+    func testClosures() throws {
+        let closure1: (Bool) -> Bool = {!$0}
+        let closure2: (Int) -> Int = {$0 * 3}
+
+        let input1: Bool = false
+        let input2: Int = 3
+
+        let result1 = closure1(input1)
+        let result2 = closure2(input2)
+
+        let anyClosure1: AnyWithTypeWrapper = addTypeWrapper(closure1)
+        let anyClosure2: AnyWithTypeWrapper = addTypeWrapper(closure2)
+        anyClosure1.
+
 //        let andResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "&&"))
 //        let orResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "||"))
-//
+
 //        XCTAssertEqual("\(and)", "\(andResult.any)")
 //        XCTAssertEqual("\(or)", "\(orResult.any)")
-//    }
+    }
 }

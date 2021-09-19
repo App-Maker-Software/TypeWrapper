@@ -7,6 +7,7 @@ public struct TypeWrapper {
         try _attempt(attempter)
     }
     #if DEBUG
+    /// debug only
     public let _rawType: Any.Type
     #endif
     
@@ -23,7 +24,13 @@ public struct TypeWrapper {
     public init<Wrapped: _GenericRegister>(withType type: Wrapped.Type) {
         self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
         #if DEBUG
-        self._rawType = Wrapped.self
+        self._rawType = type
+        #endif
+    }
+    public init<InWrapped, OutWrapped>(withClosureType type: ((InWrapped) -> OutWrapped).Type) {
+        self._attempt = HandleTypeWrapperClosure<InWrapped, OutWrapped>().attempt(attempter:)
+        #if DEBUG
+        self._rawType = type
         #endif
     }
 }
@@ -38,6 +45,12 @@ public func addTypeWrapper<T: _GenericRegister>(_ value: T) -> AnyWithTypeWrappe
     return AnyWithTypeWrapper(
         any: value,
         typeWrapper: .init(withType: T.self)
+    )
+}
+public func addTypeWrapper<T, U>(_ value: @escaping (T) -> U) -> AnyWithTypeWrapper {
+    return AnyWithTypeWrapper(
+        any: value,
+        typeWrapper: .init(withClosureType: ((T) -> U).self)
     )
 }
 

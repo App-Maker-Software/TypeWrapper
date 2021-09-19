@@ -234,7 +234,8 @@ final class TypeWrapperTests: XCTestCase {
 
         let anyClosure1: AnyWithTypeWrapper = addTypeWrapper(closure1)
         let anyClosure2: AnyWithTypeWrapper = addTypeWrapper(closure2)
-        anyClosure1.
+        let result = try anyClosure1.typeWrapper.runClosure(with: input1).any
+        fatalError("\(result)")
 
 //        let andResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "&&"))
 //        let orResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "||"))

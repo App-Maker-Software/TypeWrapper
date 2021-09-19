@@ -22,17 +22,18 @@ Solution with `TypeWrapper`:
 // setup
 extension TypeWrapper {
     func makeRed(_ someView: Any) throws -> AnyWithTypeWrapper {
-        try self.send(someView, as: {
-            ($0 as? _SwiftUIView)?.onReceive(input:)
-        })
+        try self.attempt {
+            ($0 as? _SwiftUIView)?.onReceive(input: someView)
+        }
     }
 }
 protocol _SwiftUIView {
-    func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) -> AnyWithTypeWrapper
 }
 extension AttemptIfConformsStruct: _SwiftUIView where Wrapped: View {
-    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
-        let redView = (input as! Wrapped).foregroundColor(.red)
+    public func onReceive(input: Any) -> AnyWithTypeWrapper {
+        let view = input as! Wrapped
+        let redView = view.foregroundColor(.red)
         return addTypeWrapper(redView)
     }
 }
@@ -82,9 +83,9 @@ Here we used `Register1Generic`, because we have one generic...but we could have
 ```swift
 extension TypeWrapper {
     func add12Point4ToGenericType(_ any: Any) throws -> AnyWithTypeWrapper {
-        try self.send(any, as: {
-            ($0 as? _Example)?.onReceive(input:)
-        })
+        try self.attempt {
+            ($0 as? _CustomTypeWithGenericFloatingPoint)?.onReceive(input: any)
+        }
     }
 }
 protocol _Example {

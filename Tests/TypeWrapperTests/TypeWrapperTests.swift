@@ -181,6 +181,29 @@ final class TypeWrapperTests: XCTestCase {
         XCTAssertEqual("\(type(of:result1 as Any))", "\(type(of:resultFromAny1.any))")
         XCTAssertEqual("\(type(of:result2 as Any))", "\(type(of:resultFromAny2.any))")
         XCTAssertEqual("\(type(of:result3 as Any))", "\(type(of:resultFromAny3.any))")
+        
+        do {
+            let badInfo = ArbitraryGenericBuilder()
+                .add(type: type(of: badValue1))
+                .add(type: type(of: badValue2))
+                .getBuilt()
+            
+            _ = try badInfo.attemptInit(args: AttemptInitArgs(
+                args: [badValue1, badValue2]
+            ))
+            XCTFail()
+        } catch {}
+        do {
+            let badInfo = ArbitraryGenericBuilder()
+                .add(type: type(of: badValue3))
+                .add(type: type(of: badValue2))
+                .getBuilt()
+            
+            _ = try badInfo.attemptInit(args: AttemptInitArgs(
+                args: [badValue3, badValue2]
+            ))
+            XCTFail()
+        } catch {}
     }
     
     func testMoreOptionsExample() throws {

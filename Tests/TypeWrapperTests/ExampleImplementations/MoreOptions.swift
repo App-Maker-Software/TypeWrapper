@@ -12,13 +12,13 @@ import TypeWrapper
 //
 extension TypeWrapper {
     func boolMoreOptions(_ options: _BoolExtraOptions) throws -> AnyWithTypeWrapper {
-        try self.send(options, as: {
-            ($0 as? _Bool)?.onReceive(input:)
-        })
+        try self.attempt {
+            ($0 as? _Bool)?.onReceive(options: options)
+        }
     }
 }
 protocol _Bool {
-    func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive(options: _BoolExtraOptions) -> AnyWithTypeWrapper
 }
 struct _BoolExtraOptions {
     let someBool: Any
@@ -26,8 +26,7 @@ struct _BoolExtraOptions {
     let op: String
 }
 extension AttemptIfConformsStruct: _Bool where Wrapped == Bool {
-    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
-        let options = input as! _BoolExtraOptions
+    func onReceive(options: _BoolExtraOptions) -> AnyWithTypeWrapper {
         if let someBool: Bool = options.someBool as? Bool,
            let otherBool: Bool = options.otherBool as? Bool {
             if options.op == "||" {

@@ -9,14 +9,14 @@ final class TypeWrapperTests: XCTestCase {
         let normalResult = int + 7
         
         // without using type directly
-        let (anyInt, typeWrapper) = addTypeWrapper(int)
-        let (indirectResult, _) = try typeWrapper.addSevenToInt(anyInt)
+        let anyIntWithTypeWrapper = addTypeWrapper(int)
+        let anyIntWithTypeWrapperModified = try anyIntWithTypeWrapper.typeWrapper.addSevenToInt(anyIntWithTypeWrapper.any)
         
-        XCTAssertEqual("\(normalResult)", "\(indirectResult)")
+        XCTAssertEqual("\(normalResult)", "\(anyIntWithTypeWrapperModified.any)")
         
         // should fail here
         do {
-            _ = try typeWrapper.addSevenToDouble(anyInt)
+            _ = try anyIntWithTypeWrapper.typeWrapper.addSevenToDouble(anyIntWithTypeWrapper.any)
             XCTFail()
         } catch {}
     }
@@ -26,15 +26,18 @@ final class TypeWrapperTests: XCTestCase {
         let normalResult = double + 7
         
         // without using type directly
-        let (anyDouble, typeWrapper) = addTypeWrapper(double)
-        let (indirectResult, _) = try typeWrapper.addSevenToDouble(anyDouble)
+        let anyDoubleWithTypeWrapper = addTypeWrapper(double)
+        let anyDoubleWithTypeWrapperModified = try anyDoubleWithTypeWrapper.typeWrapper.addSevenToDouble(anyDoubleWithTypeWrapper.any)
         
-        XCTAssertEqual("\(normalResult)", "\(indirectResult)")
+        XCTAssertEqual("\(normalResult)", "\(anyDoubleWithTypeWrapperModified.any)")
         
         // should fail here
         do {
-            _ = try typeWrapper.addSevenToInt(anyDouble)
-            _ = try typeWrapper.add12Point4ToGenericType(anyDouble)
+            _ = try anyDoubleWithTypeWrapper.typeWrapper.addSevenToInt(anyDoubleWithTypeWrapper.any)
+            XCTFail()
+        } catch {}
+        do {
+            _ = try anyDoubleWithTypeWrapper.typeWrapper.add12Point4ToGenericType(anyDoubleWithTypeWrapper.any)
             XCTFail()
         } catch {}
     }
@@ -44,15 +47,18 @@ final class TypeWrapperTests: XCTestCase {
         let normalResult = someView.foregroundColor(.red)
         
         // without using type directly
-        let (anyConcreteView, typeWrapper) = addTypeWrapper(someView)
-        let (indirectResult, _) = try typeWrapper.makeRed(anyConcreteView)
+        let anyWithTypeWrapper = addTypeWrapper(someView)
+        let anyWithTypeWrapperModified = try anyWithTypeWrapper.typeWrapper.makeRed(anyWithTypeWrapper.any)
         
-        XCTAssertEqual("\(normalResult)", "\(indirectResult)")
+        XCTAssertEqual("\(normalResult)", "\(anyWithTypeWrapperModified.any)")
         
         // should fail here
         do {
-            _ = try typeWrapper.addSevenToInt(anyConcreteView)
-            _ = try typeWrapper.add12Point4ToGenericType(anyConcreteView)
+            _ = try anyWithTypeWrapper.typeWrapper.addSevenToInt(anyWithTypeWrapper.any)
+            XCTFail()
+        } catch {}
+        do {
+            _ = try anyWithTypeWrapper.typeWrapper.add12Point4ToGenericType(anyWithTypeWrapper.any)
             XCTFail()
         } catch {}
     }
@@ -80,7 +86,13 @@ final class TypeWrapperTests: XCTestCase {
             let el = array[i]
             do {
                 _ = try el.typeWrapper.addSevenToInt(el.any)
+                XCTFail()
+            } catch {}
+            do {
                 _ = try el.typeWrapper.addSevenToDouble(el.any)
+                XCTFail()
+            } catch {}
+            do {
                 _ = try el.typeWrapper.add12Point4ToGenericType(el.any)
                 XCTFail()
             } catch {}
@@ -94,25 +106,106 @@ final class TypeWrapperTests: XCTestCase {
         let normalResult2 = genericType2.floatingPointValue + 12.4
         
         // without using type directly
-        let (erasedValue1, typeWrapper1) = addTypeWrapper(genericType1)
-        let (indirectResult1, _) = try typeWrapper1.add12Point4ToGenericType(erasedValue1)
-        let (erasedValue2, typeWrapper2) = addTypeWrapper(genericType2)
-        let (indirectResult2, _) = try typeWrapper2.add12Point4ToGenericType(erasedValue2)
+        let anyWithTypeWrapper1 = addTypeWrapper(genericType1)
+        let anyWithTypeWrapper1Modified = try anyWithTypeWrapper1.typeWrapper.add12Point4ToGenericType(anyWithTypeWrapper1.any)
+        let anyWithTypeWrapper2 = addTypeWrapper(genericType2)
+        let anyWithTypeWrapper2Modified = try anyWithTypeWrapper2.typeWrapper.add12Point4ToGenericType(anyWithTypeWrapper2.any)
         
-        XCTAssertEqual("\(normalResult1)", "\(indirectResult1)")
-        XCTAssertEqual("\(normalResult2)", "\(indirectResult2)")
+        XCTAssertEqual("\(normalResult1)", "\(anyWithTypeWrapper1Modified.any)")
+        XCTAssertEqual("\(normalResult2)", "\(anyWithTypeWrapper2Modified.any)")
         XCTAssertNotEqual("\(normalResult1)", "\(normalResult2)")
-        XCTAssertNotEqual("\(indirectResult1)", "\(indirectResult2)")
+        XCTAssertNotEqual("\(anyWithTypeWrapper1Modified.any)", "\(anyWithTypeWrapper2Modified.any)")
         
         // should fail here
         do {
-            _ = try typeWrapper1.addSevenToInt(erasedValue1)
-            _ = try typeWrapper2.addSevenToInt(erasedValue2)
-            _ = try typeWrapper1.addSevenToDouble(erasedValue1)
-            _ = try typeWrapper2.addSevenToDouble(erasedValue2)
+            _ = try anyWithTypeWrapper1.typeWrapper.addSevenToInt(anyWithTypeWrapper1.any)
+            XCTFail()
+        } catch {}
+        do {
+            _ = try anyWithTypeWrapper2.typeWrapper.addSevenToInt(anyWithTypeWrapper2.any)
+            XCTFail()
+        } catch {}
+        do {
+            _ = try anyWithTypeWrapper1.typeWrapper.addSevenToDouble(anyWithTypeWrapper1.any)
+            XCTFail()
+        } catch {}
+        do {
+            _ = try anyWithTypeWrapper2.typeWrapper.addSevenToDouble(anyWithTypeWrapper2.any)
             XCTFail()
         } catch {}
     }
+    func testArbitraryGenericBuilder() throws {
+        let goodValue1_1: Double = 3
+        let goodValue1_2: Text = Text("hello")
+        let goodValue2_1: CGFloat = 3
+        let goodValue2_2: Slider<EmptyView, EmptyView> = Slider(value: .constant(0))
+        let goodValue3_1: Float = 3
+        let goodValue3_2: EmptyView = EmptyView()
+        let badValue1: Int = 3
+        let badValue2: Bool = false
+        let badValue3: String = ""
+        
+        let result1 = GenericFuncsTest(value: goodValue1_1, view: goodValue1_2)
+        let result2 = GenericFuncsTest(value: goodValue2_1, view: goodValue2_2)
+        let result3 = GenericFuncsTest(value: goodValue3_1, view: goodValue3_2)
+        
+        let genericTypeInfo1 = ArbitraryGenericBuilder()
+            .add(type: type(of: goodValue1_1))
+            .add(type: type(of: goodValue1_2))
+            .getBuilt()
+        
+        let resultFromAny1 = try genericTypeInfo1.attemptInit(args: AttemptInitArgs(
+            args: [goodValue1_1, goodValue1_2]
+        ))
+        
+        
+        let genericTypeInfo2 = ArbitraryGenericBuilder()
+            .add(type: type(of: goodValue2_1))
+            .add(type: type(of: goodValue2_2))
+            .getBuilt()
+        
+        let resultFromAny2 = try genericTypeInfo2.attemptInit(args: AttemptInitArgs(
+            args: [goodValue2_1, goodValue2_2]
+        ))
+        
+        
+        let genericTypeInfo3 = ArbitraryGenericBuilder()
+            .add(type: type(of: goodValue3_1))
+            .add(type: type(of: goodValue3_2))
+            .getBuilt()
+        
+        let resultFromAny3 = try genericTypeInfo3.attemptInit(args: AttemptInitArgs(
+            args: [goodValue3_1, goodValue3_2]
+        ))
+        
+        XCTAssertEqual("\(type(of:result1 as Any))", "\(type(of:resultFromAny1.any))")
+        XCTAssertEqual("\(type(of:result2 as Any))", "\(type(of:resultFromAny2.any))")
+        XCTAssertEqual("\(type(of:result3 as Any))", "\(type(of:resultFromAny3.any))")
+        
+        do {
+            let badInfo = ArbitraryGenericBuilder()
+                .add(type: type(of: badValue1))
+                .add(type: type(of: badValue2))
+                .getBuilt()
+            
+            _ = try badInfo.attemptInit(args: AttemptInitArgs(
+                args: [badValue1, badValue2]
+            ))
+            XCTFail()
+        } catch {}
+        do {
+            let badInfo = ArbitraryGenericBuilder()
+                .add(type: type(of: badValue3))
+                .add(type: type(of: badValue2))
+                .getBuilt()
+            
+            _ = try badInfo.attemptInit(args: AttemptInitArgs(
+                args: [badValue3, badValue2]
+            ))
+            XCTFail()
+        } catch {}
+    }
+    
     func testMoreOptionsExample() throws {
         let bool1 = false
         let bool2 = true
@@ -129,4 +222,23 @@ final class TypeWrapperTests: XCTestCase {
         XCTAssertEqual("\(and)", "\(andResult.any)")
         XCTAssertEqual("\(or)", "\(orResult.any)")
     }
+//    func testClosures() throws {
+//        let closure1: (Bool) -> Bool = {!$0}
+//        let closure2: (Int) -> Int = {$0 * 3}
+//
+//        let input1: Bool = false
+//        let input2: Int = 3
+//
+//        let result1 = closure1(input1)
+//        let result2 = closure2(input2)
+//
+//        let anyClosure1: AnyWithTypeWrapper = addTypeWrapper(closure1)
+//        let anyClosure2: AnyWithTypeWrapper = addTypeWrapper(closure2)
+//
+//        let andResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "&&"))
+//        let orResult = try anyBool1.typeWrapper.boolMoreOptions(_BoolExtraOptions(someBool: anyBool1.any, otherBool: anyBool2.any, op: "||"))
+//
+//        XCTAssertEqual("\(and)", "\(andResult.any)")
+//        XCTAssertEqual("\(or)", "\(orResult.any)")
+//    }
 }

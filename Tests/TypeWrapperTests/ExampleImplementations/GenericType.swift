@@ -23,16 +23,16 @@ extension CustomTypeWithGenericFloatingPoint: Register1Generic {
 //
 extension TypeWrapper {
     func add12Point4ToGenericType(_ any: Any) throws -> AnyWithTypeWrapper {
-        try self.send(any, as: {
-            ($0 as? _CustomTypeWithGenericFloatingPoint)?.onReceive(input:)
-        })
+        try self.attempt {
+            ($0 as? _CustomTypeWithGenericFloatingPoint)?.onReceive(input: any)
+        }
     }
 }
 protocol _CustomTypeWithGenericFloatingPoint {
-    func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) -> AnyWithTypeWrapper
 }
-extension AttemptIfConformsStruct: _CustomTypeWithGenericFloatingPoint where Wrapped == CustomTypeWithGenericFloatingPoint<Generics.Generic0>, Generics.Generic0: FloatingPoint & ExpressibleByFloatLiteral {
-    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
+extension AttemptIfConformsStruct: _CustomTypeWithGenericFloatingPoint where Wrapped == CustomTypeWithGenericFloatingPoint<Generics.Generic0> {
+    public func onReceive(input: Any) -> AnyWithTypeWrapper {
         let floatingPointValue = (input as! Wrapped).floatingPointValue
         let twelvePoint4: Generics.Generic0 = 12.4
         let result = floatingPointValue + twelvePoint4

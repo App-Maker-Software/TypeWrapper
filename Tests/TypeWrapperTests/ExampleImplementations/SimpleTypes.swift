@@ -12,16 +12,16 @@ import TypeWrapper
 //
 extension TypeWrapper {
     func addSevenToInt(_ anyInt: Any) throws -> AnyWithTypeWrapper {
-        try self.send(anyInt, as: {
-            ($0 as? _SwiftInt)?.onReceive(input:)
-        })
+        try self.attempt {
+            ($0 as? _SwiftInt)?.onReceive(input: anyInt)
+        }
     }
 }
 protocol _SwiftInt {
-    func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) -> AnyWithTypeWrapper
 }
 extension AttemptIfConformsStruct: _SwiftInt where Wrapped == Int {
-    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
+    public func onReceive(input: Any) -> AnyWithTypeWrapper {
         let int = input as! Int + 7
         return addTypeWrapper(int)
     }
@@ -31,16 +31,16 @@ extension AttemptIfConformsStruct: _SwiftInt where Wrapped == Int {
 //
 extension TypeWrapper {
     func addSevenToDouble(_ anyDouble: Any) throws -> AnyWithTypeWrapper {
-        try self.send(anyDouble, as: {
-            ($0 as? _SwiftDouble)?.onReceive(input:)
-        })
+        try self.attempt {
+            ($0 as? _SwiftDouble)?.onReceive(input: anyDouble)
+        }
     }
 }
 protocol _SwiftDouble {
-    func onReceive(input: Any) throws -> AnyWithTypeWrapper
+    func onReceive(input: Any) -> AnyWithTypeWrapper
 }
 extension AttemptIfConformsStruct: _SwiftDouble where Wrapped == Double {
-    public func onReceive(input: Any) throws -> AnyWithTypeWrapper {
+    public func onReceive(input: Any) -> AnyWithTypeWrapper {
         let double = input as! Double + 7
         return addTypeWrapper(double)
     }

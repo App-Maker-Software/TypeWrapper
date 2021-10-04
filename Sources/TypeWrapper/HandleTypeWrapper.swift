@@ -6,34 +6,34 @@
 //
 
 public struct HandleTypeWrapper<Wrapped> {
-    func attempt(attempter: (Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
+    func attempt(attempter: (Any) throws -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
         let attempt = AttemptIfConformsStruct(Wrapped.self, _NonGeneric.self)
-        if let result = attempter(attempt) {
+        if let result = try attempter(attempt) {
             return result
         } else {
             throw TypeWrapperError.mismatch
         }
     }
-    func attempt(attempter: (Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper where Wrapped: _GenericRegister {
+    func attempt(attempter: (Any) throws -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper where Wrapped: _GenericRegister {
         let attempt = AttemptIfConformsStruct(Wrapped.self, Wrapped.self)
-        if let result = attempter(attempt) {
+        if let result = try attempter(attempt) {
             return result
         } else {
             throw TypeWrapperError.mismatch
         }
     }
-    func sendReturnOnlyType(_ input: Any, toKnown: (Any) -> TypeOnRecieve2?) throws -> TypeWrapper {
+    func attemptReturnOnlyType(attempter: (Any) throws -> TypeWrapper?) throws -> TypeWrapper {
         let attempt = AttemptIfConformsStruct(Wrapped.self, _NonGeneric.self)
-        if let typeOnRecieve = toKnown(attempt) {
-            return try typeOnRecieve(input)
+        if let result = try attempter(attempt) {
+            return result
         } else {
             throw TypeWrapperError.mismatch
         }
     }
-    func sendReturnOnlyType(_ input: Any, toKnown: (Any) -> TypeOnRecieve2?) throws -> TypeWrapper where Wrapped: _GenericRegister {
+    func attemptReturnOnlyType(attempter: (Any) throws -> TypeWrapper?) throws -> TypeWrapper where Wrapped: _GenericRegister {
         let attempt = AttemptIfConformsStruct(Wrapped.self, Wrapped.self)
-        if let typeOnRecieve = toKnown(attempt) {
-            return try typeOnRecieve(input)
+        if let result = try attempter(attempt) {
+            return result
         } else {
             throw TypeWrapperError.mismatch
         }

@@ -1,10 +1,14 @@
 
 public typealias TypeOnRecieve = (_ input: Any) throws -> AnyWithTypeWrapper
+public typealias TypeOnRecieve2 = (_ input: Any) throws -> TypeWrapper
 
 public struct TypeWrapper {
     // public
     public func attempt(_ attempter: (Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
         try _attempt(attempter)
+    }
+    public func attemptOnlyType(_ attempter: (Any) -> TypeWrapper?) throws -> TypeWrapper {
+        try _attemptOnlyType(attempter)
     }
     #if DEBUG
     public let _rawType: Any.Type
@@ -12,16 +16,19 @@ public struct TypeWrapper {
     
     // private
     private let _attempt: ((Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper
+    private let _attemptOnlyType: ((Any) -> TypeWrapper?) throws -> TypeWrapper
     
     // inits
     public init<Wrapped>(withType type: Wrapped.Type) {
         self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
+        self._attemptOnlyType = HandleTypeWrapper<Wrapped>().attemptReturnOnlyType(attempter:)
         #if DEBUG
         self._rawType = Wrapped.self
         #endif
     }
     public init<Wrapped: _GenericRegister>(withType type: Wrapped.Type) {
         self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
+        self._attemptOnlyType = HandleTypeWrapper<Wrapped>().attemptReturnOnlyType(attempter:)
         #if DEBUG
         self._rawType = Wrapped.self
         #endif

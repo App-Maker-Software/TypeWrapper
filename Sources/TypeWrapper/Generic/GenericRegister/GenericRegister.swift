@@ -12,4 +12,9 @@ public protocol _GenericRegister {
     associatedtype Generic2
     associatedtype Generic3
     associatedtype Generic4
+    associatedtype Generic5
+    associatedtype Generic6
+    associatedtype Generic7
+    associatedtype Generic8
+    associatedtype Generic9
 }

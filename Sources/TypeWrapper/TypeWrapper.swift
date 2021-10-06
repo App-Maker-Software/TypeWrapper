@@ -4,10 +4,10 @@ public typealias TypeOnRecieve2 = (_ input: Any) throws -> TypeWrapper
 
 public struct TypeWrapper {
     // public
-    public func attempt(_ attempter: (Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
+    public func attempt(_ attempter: (Any) throws -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
         try _attempt(attempter)
     }
-    public func attemptOnlyType(_ attempter: (Any) -> TypeWrapper?) throws -> TypeWrapper {
+    public func attemptOnlyType(_ attempter: (Any) throws -> TypeWrapper?) throws -> TypeWrapper {
         try _attemptOnlyType(attempter)
     }
     #if DEBUG
@@ -15,8 +15,8 @@ public struct TypeWrapper {
     #endif
     
     // private
-    private let _attempt: ((Any) -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper
-    private let _attemptOnlyType: ((Any) -> TypeWrapper?) throws -> TypeWrapper
+    private let _attempt: ((Any) throws -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper
+    private let _attemptOnlyType: ((Any) throws -> TypeWrapper?) throws -> TypeWrapper
     
     // inits
     public init<Wrapped>(withType type: Wrapped.Type) {

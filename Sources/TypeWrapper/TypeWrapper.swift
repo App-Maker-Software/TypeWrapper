@@ -7,6 +7,9 @@ public struct TypeWrapper {
     public func attempt(_ attempter: (Any) throws -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper {
         try _attempt(attempter)
     }
+    public func attemptOnlyValue(_ attempter: (Any) throws -> Any?) throws -> Any {
+        try _attemptOnlyValue(attempter)
+    }
     public func attemptOnlyType(_ attempter: (Any) throws -> TypeWrapper?) throws -> TypeWrapper {
         try _attemptOnlyType(attempter)
     }
@@ -16,11 +19,13 @@ public struct TypeWrapper {
     
     // private
     private let _attempt: ((Any) throws -> AnyWithTypeWrapper?) throws -> AnyWithTypeWrapper
+    private let _attemptOnlyValue: ((Any) throws -> Any?) throws -> Any
     private let _attemptOnlyType: ((Any) throws -> TypeWrapper?) throws -> TypeWrapper
     
     // inits
     public init<Wrapped>(withType type: Wrapped.Type) {
         self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
+        self._attemptOnlyValue = HandleTypeWrapper<Wrapped>().attemptReturnOnlyValue(attempter:)
         self._attemptOnlyType = HandleTypeWrapper<Wrapped>().attemptReturnOnlyType(attempter:)
         #if DEBUG
         self._rawType = Wrapped.self
@@ -28,6 +33,7 @@ public struct TypeWrapper {
     }
     public init<Wrapped: _GenericRegister>(withType type: Wrapped.Type) {
         self._attempt = HandleTypeWrapper<Wrapped>().attempt(attempter:)
+        self._attemptOnlyValue = HandleTypeWrapper<Wrapped>().attemptReturnOnlyValue(attempter:)
         self._attemptOnlyType = HandleTypeWrapper<Wrapped>().attemptReturnOnlyType(attempter:)
         #if DEBUG
         self._rawType = Wrapped.self
